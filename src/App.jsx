@@ -10,55 +10,55 @@ const DEFAULT_SLIDES = [
   {
     id: 1,
     duration: 7.5,
-    bgType: 'gradient',
-    bgGradient: { from: '#3b0764', to: '#1d4ed8', angle: 135 },
-    titleText: 'TỰ ĐỘNG TẠO VIDEO',
-    titleColor: '#06b6d4',
-    titleSize: 58,
-    subtitleText: 'Chạy trực tiếp trên trình duyệt bằng React và HTML5 Canvas',
-    subtitleColor: '#e9d5ff',
-    subtitleSize: 26,
-    textAnimation: 'slide-up',
+    bgType: 'image',
+    bgImage: '/scene1.png',
+    titleText: 'KHỞI ĐẦU LẠNH LẼO',
+    titleColor: '#38bdf8',
+    titleSize: 56,
+    subtitleText: 'Một robot cô đơn đứng giữa thành phố tương lai đầy tuyết',
+    subtitleColor: '#f1f5f9',
+    subtitleSize: 24,
+    textAnimation: 'fade',
     transition: 'crossfade'
   },
   {
     id: 2,
     duration: 7.5,
-    bgType: 'gradient',
-    bgGradient: { from: '#1e3a8a', to: '#111827', angle: 135 },
-    titleText: 'HIỆU ỨNG CHUYÊN NGHIỆP',
-    titleColor: '#a855f7',
-    titleSize: 54,
-    subtitleText: 'Hiệu ứng thu phóng hình, hạt bay nghệ thuật và chữ động cuốn hút',
-    subtitleColor: '#cbd5e1',
+    bgType: 'image',
+    bgImage: '/scene2.png',
+    titleText: 'TÌM THẤY ÁNH SÁNG',
+    titleColor: '#4ade80',
+    titleSize: 56,
+    subtitleText: 'Phát hiện một mầm cây xanh nhỏ bé mọc lên giữa những lớp sắt thép khô cằn',
+    subtitleColor: '#f1f5f9',
     subtitleSize: 24,
-    textAnimation: 'zoom',
+    textAnimation: 'slide-up',
     transition: 'slide'
   },
   {
     id: 3,
     duration: 7.5,
-    bgType: 'gradient',
-    bgGradient: { from: '#4c0519', to: '#581c87', angle: 135 },
-    titleText: 'XUẤT VIDEO TRONG NHÁY MẮT',
-    titleColor: '#ec4899',
+    bgType: 'image',
+    bgImage: '/scene3.png',
+    titleText: 'KẾT NỐI TỰ NHIÊN',
+    titleColor: '#22d3ee',
     titleSize: 56,
-    subtitleText: 'Bộ ghi MediaRecorder xuất video 30 FPS chất lượng cao cực nhanh',
-    subtitleColor: '#fbcfe8',
+    subtitleText: 'Hệ thống dữ liệu của robot đồng bộ và cảm nhận được sự sống',
+    subtitleColor: '#f1f5f9',
     subtitleSize: 24,
-    textAnimation: 'fade',
+    textAnimation: 'zoom',
     transition: 'zoom'
   },
   {
     id: 4,
     duration: 7.5,
-    bgType: 'gradient',
-    bgGradient: { from: '#022c22', to: '#064e3b', angle: 135 },
-    titleText: 'BẮT ĐẦU TẢI XUỐNG',
-    titleColor: '#10b981',
+    bgType: 'image',
+    bgImage: '/scene4.png',
+    titleText: 'THẾ GIỚI MỚI',
+    titleColor: '#fbbf24',
     titleSize: 56,
-    subtitleText: 'Nhấn nút xuất video để tải tệp WebM về thiết bị của bạn',
-    subtitleColor: '#a7f3d0',
+    subtitleText: 'Robot bước ra thung lũng xanh mướt tràn ngập ánh nắng mặt trời',
+    subtitleColor: '#f1f5f9',
     subtitleSize: 24,
     textAnimation: 'slide-up',
     transition: 'crossfade'
@@ -210,7 +210,39 @@ export default function App() {
     setCustomAudioBuffer(null);
     setCustomAudioName('');
 
-    if (presetType === 'tech') {
+    if (presetType === 'story') {
+      setSlides([
+        {
+          id: 1, duration: 7.5, bgType: 'image',
+          bgImage: '/scene1.png',
+          titleText: 'KHỞI ĐẦU LẠNH LẼO', titleColor: '#38bdf8', titleSize: 56,
+          subtitleText: 'Một robot cô đơn đứng giữa thành phố tương lai đầy tuyết', subtitleColor: '#f1f5f9', subtitleSize: 24,
+          textAnimation: 'fade', transition: 'crossfade'
+        },
+        {
+          id: 2, duration: 7.5, bgType: 'image',
+          bgImage: '/scene2.png',
+          titleText: 'TÌM THẤY ÁNH SÁNG', titleColor: '#4ade80', titleSize: 56,
+          subtitleText: 'Phát hiện một mầm cây xanh nhỏ bé mọc lên giữa những lớp sắt thép khô cằn', subtitleColor: '#f1f5f9', subtitleSize: 24,
+          textAnimation: 'slide-up', transition: 'slide'
+        },
+        {
+          id: 3, duration: 7.5, bgType: 'image',
+          bgImage: '/scene3.png',
+          titleText: 'KẾT NỐI TỰ NHIÊN', titleColor: '#22d3ee', titleSize: 56,
+          subtitleText: 'Hệ thống dữ liệu của robot đồng bộ và cảm nhận được sự sống', subtitleColor: '#f1f5f9', subtitleSize: 24,
+          textAnimation: 'zoom', transition: 'zoom'
+        },
+        {
+          id: 4, duration: 7.5, bgType: 'image',
+          bgImage: '/scene4.png',
+          titleText: 'THẾ GIỚI MỚI', titleColor: '#fbbf24', titleSize: 56,
+          subtitleText: 'Robot bước ra thung lũng xanh mướt tràn ngập ánh nắng mặt trời', subtitleColor: '#f1f5f9', subtitleSize: 24,
+          textAnimation: 'slide-up', transition: 'crossfade'
+        }
+      ]);
+      setSelectedTrackId('ambient');
+    } else if (presetType === 'tech') {
       setSlides([
         {
           id: 1, duration: 7.5, bgType: 'gradient',

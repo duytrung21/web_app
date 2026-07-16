@@ -131,7 +131,13 @@ export default function Controls({
         <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-purple" /> Mẫu Thiết Kế Nhanh
         </h3>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 gap-2">
+          <button 
+            onClick={() => onApplyPreset('story')}
+            className="btn-secondary text-xs py-2 px-1 flex flex-col items-center gap-1 font-semibold text-center hover:text-indigo"
+          >
+            <span>🤖 Kịch Bản Robot AI</span>
+          </button>
           <button 
             onClick={() => onApplyPreset('tech')}
             className="btn-secondary text-xs py-2 px-1 flex flex-col items-center gap-1 font-semibold text-center hover:text-purple"

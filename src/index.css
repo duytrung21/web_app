@@ -1,31 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
 :root {
-  /* Color Palette - Cyber Dark theme */
-  --bg-main: #0a0b10;
-  --bg-card: rgba(20, 22, 33, 0.7);
-  --bg-card-hover: rgba(28, 31, 46, 0.8);
-  --bg-input: #12131b;
-  --border: rgba(255, 255, 255, 0.08);
-  --border-focus: rgba(168, 85, 247, 0.5);
+  /* Color Palette - Premium Light Soothing theme */
+  --bg-main: #f5f7fa;
+  --bg-card: rgba(255, 255, 255, 0.72);
+  --bg-card-hover: rgba(255, 255, 255, 0.85);
+  --bg-input: #ffffff;
+  --border: rgba(15, 23, 42, 0.08);
+  --border-focus: rgba(124, 58, 237, 0.4);
   
-  --text-primary: #f3f4f6;
-  --text-secondary: #9ca3af;
-  --text-muted: #6b7280;
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
   
-  --purple: #a855f7;
-  --cyan: #06b6d4;
-  --pink: #ec4899;
-  --indigo: #6366f1;
-  --emerald: #10b981;
+  --purple: #7c3aed;
+  --cyan: #0891b2;
+  --pink: #db2777;
+  --indigo: #4f46e5;
+  --emerald: #059669;
   
-  --purple-glow: rgba(168, 85, 247, 0.35);
-  --cyan-glow: rgba(6, 182, 212, 0.35);
+  --purple-glow: rgba(124, 58, 237, 0.12);
+  --cyan-glow: rgba(8, 145, 178, 0.1);
   
   --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
   --font-title: 'Outfit', system-ui, sans-serif;
   
-  --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.05);
   --shadow-neon: 0 0 15px var(--purple-glow);
 }
 
@@ -34,7 +34,7 @@
   margin: 0;
   padding: 0;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+  scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
 }
 
 /* Custom Scrollbar for premium look */
@@ -46,11 +46,11 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.15);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(0, 0, 0, 0.3);
 }
 
 body {
@@ -71,9 +71,9 @@ body::before {
   right: 0;
   bottom: 0;
   background-image: 
-    radial-gradient(at 0% 0%, rgba(168, 85, 247, 0.12) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.1) 0px, transparent 50%),
-    radial-gradient(at 50% 50%, rgba(236, 72, 153, 0.05) 0px, transparent 50%);
+    radial-gradient(at 0% 0%, rgba(124, 58, 237, 0.08) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(8, 145, 178, 0.06) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(219, 39, 119, 0.03) 0px, transparent 50%);
   z-index: -1;
   pointer-events: none;
 }
@@ -103,7 +103,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .glass-panel:hover {
-  border-color: rgba(255, 255, 255, 0.15);
+  border-color: rgba(0, 0, 0, 0.15);
 }
 
 /* Premium Buttons */
@@ -120,12 +120,12 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   gap: 8px;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 14px 0 rgba(168, 85, 247, 0.4);
+  box-shadow: 0 4px 14px 0 rgba(124, 58, 237, 0.25);
 }
 
 .btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px 0 rgba(168, 85, 247, 0.6);
+  box-shadow: 0 6px 20px 0 rgba(124, 58, 237, 0.4);
   filter: brightness(1.1);
 }
 
@@ -141,7 +141,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.03);
   color: var(--text-primary);
   border: 1px solid var(--border);
   padding: 10px 20px;
@@ -156,8 +156,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.12);
 }
 
 .btn-secondary:disabled {
@@ -221,7 +221,7 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-appearance: none;
   width: 100%;
   height: 6px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.08);
   border-radius: 9999px;
   outline: none;
 }

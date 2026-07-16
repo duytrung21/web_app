@@ -318,7 +318,7 @@ export default function App() {
             <Video className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-purple/70 bg-clip-text text-transparent" style={{ margin: 0 }}>
+            <h1 className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-slate-900 via-indigo-950 to-purple bg-clip-text text-transparent" style={{ margin: 0 }}>
               BeeVideo Studio
             </h1>
             <p className="text-[10px] text-text-secondary uppercase tracking-widest font-semibold">Trình Tạo Video 30s Tự Động</p>

@@ -243,21 +243,21 @@ export default function ExportModal({
   const formattedSize = (fileSize / (1024 * 1024)).toFixed(2);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4">
       <div className="glass-panel w-full max-w-md p-6 relative border-purple/30 overflow-hidden">
         
         {/* Neon accent glow behind card */}
-        <div className="absolute -top-12 -left-12 w-32 h-32 bg-purple/20 rounded-full blur-2xl pointer-events-none" />
-        <div className="absolute -bottom-12 -right-12 w-32 h-32 bg-cyan/15 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute -top-12 -left-12 w-32 h-32 bg-purple/15 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute -bottom-12 -right-12 w-32 h-32 bg-cyan/10 rounded-full blur-2xl pointer-events-none" />
 
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
-          <h3 className="text-xl font-bold flex items-center gap-2 text-white">
+          <h3 className="text-xl font-bold flex items-center gap-2">
             <Video className="w-5 h-5 text-purple" /> Xuất Video 30 giây
           </h3>
           <button 
             onClick={handleClose}
-            className="text-text-secondary hover:text-white p-1 rounded-full hover:bg-white/5 transition-all"
+            className="text-text-secondary hover:text-text-primary p-1 rounded-full hover:bg-black/5 transition-all"
           >
             <X className="w-5 h-5" />
           </button>
@@ -273,7 +273,7 @@ export default function ExportModal({
                 <Video className="w-8 h-8 text-purple glow-effect rounded-full" />
               </div>
               <div>
-                <h4 className="text-lg font-semibold text-white">Sẵn sàng xuất video</h4>
+                <h4 className="text-lg font-semibold">Sẵn sàng xuất video</h4>
                 <p className="text-sm text-text-secondary mt-1 max-w-xs">
                   Hệ thống sẽ ghi hình các hiệu ứng chuyển động và nhạc nền chất lượng cao trong đúng 30 giây.
                 </p>
@@ -295,7 +295,7 @@ export default function ExportModal({
                 <svg className="w-full h-full transform -rotate-90">
                   <circle 
                     cx="56" cy="56" r="48" 
-                    stroke="rgba(255,255,255,0.05)" 
+                    stroke="rgba(0,0,0,0.05)" 
                     strokeWidth="8" 
                     fill="transparent" 
                   />
@@ -311,19 +311,19 @@ export default function ExportModal({
                   />
                   <defs>
                     <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#a855f7" />
-                      <stop offset="100%" stopColor="#06b6d4" />
+                      <stop offset="0%" stopColor="#7c3aed" />
+                      <stop offset="100%" stopColor="#0891b2" />
                     </linearGradient>
                   </defs>
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-2xl font-bold text-white font-mono">{Math.floor(progress)}%</span>
+                  <span className="text-2xl font-bold font-mono">{Math.floor(progress)}%</span>
                   <span className="text-[10px] text-text-secondary uppercase tracking-wider font-semibold">Đang Ghi</span>
                 </div>
               </div>
 
               <div>
-                <h4 className="text-base font-semibold text-white">Đang xuất các phân cảnh video...</h4>
+                <h4 className="text-base font-semibold">Đang xuất các phân cảnh video...</h4>
                 <p className="text-xs text-text-secondary mt-1">
                   Vui lòng giữ tab này hoạt động. Trình duyệt đang thu lại hoạt ảnh canvas và giai điệu âm thanh.
                 </p>
@@ -331,7 +331,7 @@ export default function ExportModal({
               
               <button 
                 onClick={cleanup}
-                className="btn-secondary text-xs border-red-500/30 text-red-400 hover:bg-red-500/5 py-1.5 px-4 rounded-lg mt-2"
+                className="btn-secondary text-xs border-red-500/30 text-red-500 hover:bg-red-500/5 py-1.5 px-4 rounded-lg mt-2"
               >
                 Hủy xuất video
               </button>
@@ -345,9 +345,9 @@ export default function ExportModal({
                 <CheckCircle2 className="w-9 h-9 text-emerald" />
               </div>
               <div>
-                <h4 className="text-lg font-semibold text-white">Tạo Video Thành Công!</h4>
+                <h4 className="text-lg font-semibold">Tạo Video Thành Công!</h4>
                 <p className="text-xs text-text-secondary mt-1">
-                  Dung lượng: <span className="font-mono text-white font-semibold">{formattedSize} MB</span> | Thời lượng: <span className="font-mono text-white font-semibold">30.0s</span>
+                  Dung lượng: <span className="font-mono font-semibold">{formattedSize} MB</span> | Thời lượng: <span className="font-mono font-semibold">30.0s</span>
                 </p>
               </div>
               <div className="flex flex-col gap-2 w-full mt-3">
@@ -372,10 +372,10 @@ export default function ExportModal({
           {exportState === 'error' && (
             <div className="flex flex-col items-center gap-4">
               <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20 mb-2">
-                <AlertTriangle className="w-8 h-8 text-red-400" />
+                <AlertTriangle className="w-8 h-8 text-red-500" />
               </div>
               <div>
-                <h4 className="text-lg font-semibold text-white">Xuất Video Thất Bại</h4>
+                <h4 className="text-lg font-semibold">Xuất Video Thất Bại</h4>
                 <p className="text-sm text-text-secondary mt-1 max-w-xs">
                   Đã xảy ra lỗi trong quá trình kết hợp luồng ghi. Vui lòng đảm bảo trình duyệt của bạn hỗ trợ MediaRecorder API.
                 </p>

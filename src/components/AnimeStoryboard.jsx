@@ -1,5 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, Search, Loader2, Play, RotateCcw, X } from 'lucide-react';
+import { 
+  Sparkles, 
+  Search, 
+  Loader2, 
+  Play, 
+  RotateCcw, 
+  X, 
+  Film, 
+  Volume2, 
+  VolumeX, 
+  Pause, 
+  ChevronLeft, 
+  ChevronRight 
+} from 'lucide-react';
 import { POPULAR_ANIME_DB } from '../constants/animeDb';
 
 export default function AnimeStoryboard() {
@@ -28,6 +41,12 @@ export default function AnimeStoryboard() {
   // Lightbox overlay state
   const [lightboxUrl, setLightboxUrl] = useState(null);
   const [lightboxTitle, setLightboxTitle] = useState('');
+
+  // Video player states
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [currentSceneIdx, setCurrentSceneIdx] = useState(0);
+  const [isTtsEnabled, setIsTtsEnabled] = useState(true);
 
   useEffect(() => {
     localStorage.setItem('auragen_storyboard_images', JSON.stringify(generatedImages));
@@ -197,6 +216,82 @@ Mỗi tập phải có đúng 5 cảnh xếp theo trình tự thời gian tăng 
 
   const activeEpisode = storyboard?.episodes?.[activeEpisodeIdx];
 
+  // Vietnamese TTS voice helper
+  const speakNarration = (text) => {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    if (!isTtsEnabled) return;
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'vi-VN';
+    
+    // Find Vietnamese voice in browser
+    const voices = window.speechSynthesis.getVoices();
+    const viVoice = voices.find(v => v.lang.startsWith('vi') || v.lang.startsWith('VI'));
+    if (viVoice) {
+      utterance.voice = viVoice;
+    }
+    
+    utterance.rate = 0.85; // Slightly slower, cinematic speed
+    window.speechSynthesis.speak(utterance);
+  };
+
+  // Video playback timing effect
+  useEffect(() => {
+    let timer;
+    if (isVideoOpen && isVideoPlaying && activeEpisode) {
+      const activeScene = activeEpisode.scenes[currentSceneIdx];
+      if (activeScene) {
+        speakNarration(activeScene.description);
+      }
+
+      timer = setTimeout(() => {
+        if (currentSceneIdx < activeEpisode.scenes.length - 1) {
+          setCurrentSceneIdx(prev => prev + 1);
+        } else {
+          // Pause at end of loop
+          setIsVideoPlaying(false);
+          window.speechSynthesis.cancel();
+        }
+      }, 7500); // 7.5 seconds per scene for panning & speaking
+    }
+    
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [isVideoOpen, isVideoPlaying, currentSceneIdx, isTtsEnabled, activeEpisode]);
+
+  // Handle manual navigation in video player
+  const handleSelectVideoScene = (idx) => {
+    if (!activeEpisode) return;
+    setCurrentSceneIdx(idx);
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+    const activeScene = activeEpisode.scenes[idx];
+    if (activeScene && isVideoPlaying) {
+      // Small timeout to allow state transition
+      setTimeout(() => speakNarration(activeScene.description), 50);
+    }
+  };
+
+  // Open player overlay
+  const handleOpenVideoPlayer = () => {
+    if (!activeEpisode) return;
+    setCurrentSceneIdx(0);
+    setIsVideoOpen(true);
+    setIsVideoPlaying(true);
+  };
+
+  // Close player overlay
+  const handleCloseVideoPlayer = () => {
+    setIsVideoOpen(false);
+    setIsVideoPlaying(false);
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+  };
+
   return (
     <div className="flex flex-col gap-5 w-full max-w-6xl mx-auto p-4">
       
@@ -278,6 +373,16 @@ Mỗi tập phải có đúng 5 cảnh xếp theo trình tự thời gian tăng 
               <Play className="w-3.5 h-3.5 fill-current" />
               {isBatchGenerating ? "Đang tạo tất cả..." : "Tạo ảnh cả tập"}
             </button>
+
+            <button
+              onClick={handleOpenVideoPlayer}
+              disabled={isBatchGenerating || !activeEpisode}
+              className="btn-primary text-[11px] font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 mt-1.5 w-full bg-indigo"
+              style={{ background: 'linear-gradient(135deg, var(--indigo), var(--cyan))' }}
+            >
+              <Film className="w-3.5 h-3.5" />
+              Xem Video Tập này
+            </button>
           </div>
 
           {/* Scene Cards List */}
@@ -358,29 +463,219 @@ Mỗi tập phải có đúng 5 cảnh xếp theo trình tự thời gian tăng 
         </div>
       )}
 
-      {/* Fullscreen Lightbox Modal */}
-      {lightboxUrl && (
+      {/* Cinematic Episode Video Player Modal */}
+      {isVideoOpen && activeEpisode && (
         <div 
-          className="lightbox-backdrop" 
-          onClick={() => setLightboxUrl(null)}
-          style={{ zIndex: 999 }}
+          className="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-4"
+          style={{ backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', zIndex: 1000 }}
         >
-          <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
-            <button 
-              className="absolute top-[-40px] right-0 bg-white/10 hover:bg-white/20 text-white rounded-full p-2 transition border border-white/10"
-              onClick={() => setLightboxUrl(null)}
-            >
-              <X className="w-5 h-5" />
-            </button>
-            <img 
-              src={lightboxUrl} 
-              alt={lightboxTitle} 
-              className="lightbox-img" 
-              style={{ maxHeight: '80vh', maxWidth: '85vw' }}
-            />
-            <div className="text-center text-white bg-black/75 py-2.5 px-6 rounded-full max-w-[80vw] text-xs font-bold border border-white/10">
-              {lightboxTitle}
+          {/* Main Player view */}
+          <div className="relative w-full max-w-4xl aspect-[16/9] rounded-2xl overflow-hidden border border-white/10 bg-slate-950 shadow-2xl flex items-center justify-center group">
+            
+            {/* Slide active image rendering */}
+            {(() => {
+              const activeScene = activeEpisode.scenes[currentSceneIdx];
+              const sceneImg = generatedImages[activeScene.id];
+              
+              if (sceneImg) {
+                return (
+                  <img
+                    key={activeScene.id}
+                    src={sceneImg.url}
+                    alt={activeScene.title}
+                    className={`w-full h-full object-cover transition-transform duration-[7500ms] ${
+                      isVideoPlaying 
+                        ? (currentSceneIdx % 2 === 0 ? 'animate-kenburns-in' : 'animate-kenburns-out') 
+                        : 'scale-100'
+                    }`}
+                  />
+                );
+              } else {
+                return (
+                  <div className="flex flex-col items-center justify-center p-6 text-center text-text-secondary h-full gap-3 bg-slate-950">
+                    <Loader2 className={`w-8 h-8 text-cyan ${isVideoPlaying ? 'animate-spin' : ''}`} />
+                    <h4 className="text-sm font-bold text-white">Phân cảnh này chưa được vẽ ảnh</h4>
+                    <p className="text-[11px] max-w-[280px]">
+                      Hãy hoàn thành vẽ tranh cho <strong>Cảnh {currentSceneIdx + 1}</strong> ở bảng phân cảnh để xem trọn vẹn thước phim điện ảnh!
+                    </p>
+                  </div>
+                );
+              }
+            })()}
+
+            {/* Subtitle Narration Overlay */}
+            {activeEpisode.scenes[currentSceneIdx] && (
+              <div className="absolute bottom-6 left-6 right-6 bg-black/60 backdrop-blur-md border border-white/5 px-6 py-3 rounded-xl text-center z-10 transition">
+                <span className="text-[9px] text-cyan font-mono font-bold uppercase tracking-wider block mb-0.5">
+                  Mốc thời gian {activeEpisode.scenes[currentSceneIdx].timestamp}
+                </span>
+                <p className="text-xs font-semibold text-white leading-relaxed">
+                  {activeEpisode.scenes[currentSceneIdx].description}
+                </p>
+              </div>
+            )}
+
+            {/* Header info bar */}
+            <div className="absolute top-4 left-4 right-4 flex justify-between items-center z-10">
+              <div className="bg-black/60 backdrop-blur-md px-3 py-1 rounded-lg border border-white/5 text-[10px] text-text-secondary font-bold flex items-center gap-1.5">
+                <Film className="w-3 h-3 text-purple" />
+                <span>{storyboard.name} - {activeEpisode.title.split(': ')[0]}</span>
+              </div>
+              <button 
+                onClick={handleCloseVideoPlayer}
+                className="bg-black/60 backdrop-blur-md text-white hover:bg-white/10 rounded-full p-2 border border-white/5 transition"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
+          </div>
+
+          {/* Control Console */}
+          <div className="w-full max-w-4xl flex flex-col gap-3 mt-4 bg-card/65 border border-white/5 rounded-xl p-4 backdrop-blur-md">
+            
+            {/* Scrubber / Progress Bar */}
+            <div className="flex gap-2">
+              {activeEpisode.scenes.map((s, idx) => {
+                const isPastOrActive = idx <= currentSceneIdx;
+                const isActive = idx === currentSceneIdx;
+                const hasImg = !!generatedImages[s.id];
+                
+                return (
+                  <div
+                    key={s.id}
+                    onClick={() => handleSelectVideoScene(idx)}
+                    className="flex-grow flex flex-col gap-1 cursor-pointer group"
+                  >
+                    <div className="relative h-1 rounded-full overflow-hidden bg-white/10">
+                      <div 
+                        className={`absolute inset-y-0 left-0 transition-all duration-300 ${
+                          isActive 
+                            ? 'w-full bg-cyan shadow-[0_0_8px_rgba(6,182,212,0.6)]' 
+                            : (isPastOrActive ? 'w-full bg-purple' : 'w-0')
+                        }`} 
+                      />
+                    </div>
+                    <div className="flex justify-between items-center px-0.5 mt-0.5">
+                      <span className={`text-[9px] font-mono ${isActive ? 'text-cyan font-bold' : 'text-text-muted'}`}>
+                        {s.timestamp}
+                      </span>
+                      <span className={`text-[8px] px-1 rounded ${
+                        hasImg ? 'bg-emerald/20 text-emerald' : 'bg-red-500/15 text-red-400'
+                      }`}>
+                        {hasImg ? "Sẵn sàng" : "Trống"}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Control buttons bar */}
+            <div className="flex items-center justify-between gap-4 border-t border-white/5 pt-3 mt-1">
+              
+              {/* Play / Pause / Reset */}
+              <div className="flex items-center gap-2">
+                {isVideoPlaying ? (
+                  <button
+                    onClick={() => {
+                      setIsVideoPlaying(false);
+                      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+                    }}
+                    className="bg-purple hover:bg-purple/80 text-white rounded-lg p-2 shadow transition flex items-center justify-center"
+                    title="Tạm dừng"
+                  >
+                    <Pause className="w-3.5 h-3.5" />
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      if (currentSceneIdx === 4) {
+                        setCurrentSceneIdx(0);
+                      }
+                      setIsVideoPlaying(true);
+                    }}
+                    className="bg-cyan hover:bg-cyan/80 text-white rounded-lg p-2 shadow transition flex items-center justify-center"
+                    title="Phát tiếp"
+                  >
+                    <Play className="w-3.5 h-3.5 fill-current" />
+                  </button>
+                )}
+                
+                <button
+                  onClick={() => handleSelectVideoScene(0)}
+                  className="bg-white/5 text-text-secondary hover:text-white rounded-lg p-2 border border-white/5 transition flex items-center justify-center"
+                  title="Phát lại từ đầu"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              {/* Central Title */}
+              <div className="hidden sm:flex flex-col items-center">
+                <span className="text-[9px] text-text-muted font-bold uppercase tracking-wider">
+                  Đang trình chiếu phân cảnh
+                </span>
+                <span className="text-xs font-bold text-white mt-0.5">
+                  Cảnh {currentSceneIdx + 1}: {activeEpisode.scenes[currentSceneIdx]?.title}
+                </span>
+              </div>
+
+              {/* Prev / Next & TTS controls */}
+              <div className="flex items-center gap-3">
+                
+                {/* Voice Narration Sound switch */}
+                <button
+                  onClick={() => {
+                    const newTts = !isTtsEnabled;
+                    setIsTtsEnabled(newTts);
+                    if (!newTts && 'speechSynthesis' in window) {
+                      window.speechSynthesis.cancel();
+                    } else if (newTts && isVideoPlaying) {
+                      const activeScene = activeEpisode.scenes[currentSceneIdx];
+                      if (activeScene) speakNarration(activeScene.description);
+                    }
+                  }}
+                  className={`px-2.5 py-1.5 rounded-lg text-[10px] font-bold transition border flex items-center gap-1.5 ${
+                    isTtsEnabled
+                      ? 'bg-purple/20 text-purple border-purple'
+                      : 'bg-white/5 text-text-muted border-white/5'
+                  }`}
+                  title={isTtsEnabled ? "Tắt đọc lời kể" : "Bật đọc lời kể"}
+                >
+                  {isTtsEnabled ? (
+                    <>
+                      <Volume2 className="w-3.5 h-3.5 text-purple" />
+                      Giọng kể: Bật
+                    </>
+                  ) : (
+                    <>
+                      <VolumeX className="w-3.5 h-3.5 text-text-muted" />
+                      Giọng kể: Tắt
+                    </>
+                  )}
+                </button>
+
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => handleSelectVideoScene(Math.max(0, currentSceneIdx - 1))}
+                    disabled={currentSceneIdx === 0}
+                    className="bg-white/5 text-text-secondary hover:text-white disabled:opacity-30 rounded-lg p-2 border border-white/5 transition flex items-center justify-center"
+                  >
+                    <ChevronLeft className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    onClick={() => handleSelectVideoScene(Math.min(4, currentSceneIdx + 1))}
+                    disabled={currentSceneIdx === 4}
+                    className="bg-white/5 text-text-secondary hover:text-white disabled:opacity-30 rounded-lg p-2 border border-white/5 transition flex items-center justify-center"
+                  >
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+              </div>
+
+            </div>
+
           </div>
         </div>
       )}

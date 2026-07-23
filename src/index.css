@@ -989,3 +989,32 @@ select.form-input {
     grid-template-columns: 1fr;
   }
 }
+
+/* Ken Burns Cinematic Image Panning & Zooming effects */
+@keyframes kenburns-zoom-in {
+  0% {
+    transform: scale(1) translate(0, 0);
+  }
+  100% {
+    transform: scale(1.16) translate(-1.5%, -1%);
+  }
+}
+
+@keyframes kenburns-zoom-out {
+  0% {
+    transform: scale(1.16) translate(1.5%, 1%);
+  }
+  100% {
+    transform: scale(1) translate(0, 0);
+  }
+}
+
+.animate-kenburns-in {
+  animation: kenburns-zoom-in 7.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.animate-kenburns-out {
+  animation: kenburns-zoom-out 7.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+

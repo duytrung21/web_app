@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { Film } from 'lucide-react';
 import Header from './components/Header';
 import SidebarControls from './components/SidebarControls';
 import PreviewPanel from './components/PreviewPanel';
 import HistoryGallery from './components/HistoryGallery';
+import AnimeStoryboard from './components/AnimeStoryboard';
 import { STYLE_PRESETS, ASPECT_RATIOS, PROMPT_IDEAS } from './constants/presets';
 
 export default function App() {
+  const [currentMode, setCurrentMode] = useState('single'); // 'single' | 'storyboard'
   // Main state variables
   const [prompt, setPrompt] = useState('');
   const [negativePrompt, setNegativePrompt] = useState('');
@@ -180,50 +183,85 @@ export default function App() {
         favoritesCount={favoritesCount}
       />
 
-      {/* Main Workspace Layout */}
-      <main className="app-layout">
-        {/* Left Side: Parameters and style presets settings */}
-        <div className="w-full">
-          <SidebarControls
-            prompt={prompt}
-            setPrompt={setPrompt}
-            negativePrompt={negativePrompt}
-            setNegativePrompt={setNegativePrompt}
-            selectedStyle={selectedStyle}
-            setSelectedStyle={setSelectedStyle}
-            aspectRatio={aspectRatio}
-            setAspectRatio={setAspectRatio}
-            selectedModel={selectedModel}
-            setSelectedModel={setSelectedModel}
-            seed={seed}
-            setSeed={setSeed}
-            isRandomSeed={isRandomSeed}
-            setIsRandomSeed={setIsRandomSeed}
-            isGenerating={isGenerating}
-            onGenerate={handleGenerateImage}
-            onRandomizePrompt={handleRandomizePrompt}
-          />
-        </div>
+      {/* Mode Switcher Tabs */}
+      <div className="flex gap-4 mx-6 mt-4 border-b border-white/5 pb-2">
+        <button
+          onClick={() => setCurrentMode('single')}
+          className={`px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all relative ${
+            currentMode === 'single'
+              ? 'text-purple'
+              : 'text-text-muted hover:text-white'
+          }`}
+        >
+          Tạo Ảnh Đơn Lẻ
+          {currentMode === 'single' && (
+            <div className="absolute bottom-[-9px] left-0 right-0 h-[2px] bg-purple" style={{ zIndex: 10 }} />
+          )}
+        </button>
+        <button
+          onClick={() => setCurrentMode('storyboard')}
+          className={`px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all relative flex items-center gap-1.5 ${
+            currentMode === 'storyboard'
+              ? 'text-purple'
+              : 'text-text-muted hover:text-white'
+          }`}
+        >
+          <Film className="w-3.5 h-3.5" />
+          Live-Action Storyboard
+          {currentMode === 'storyboard' && (
+            <div className="absolute bottom-[-9px] left-0 right-0 h-[2px] bg-purple" style={{ zIndex: 10 }} />
+          )}
+        </button>
+      </div>
 
-        {/* Right Side: Active Image viewer & Creation History */}
-        <div className="flex flex-col gap-6">
-          <PreviewPanel
-            activeImage={activeImage}
-            isGenerating={isGenerating}
-            onFavoriteToggle={handleFavoriteToggle}
-            onReuseSettings={handleReuseSettings}
-          />
+      {currentMode === 'single' ? (
+        /* Main Workspace Layout */
+        <main className="app-layout">
+          {/* Left Side: Parameters and style presets settings */}
+          <div className="w-full">
+            <SidebarControls
+              prompt={prompt}
+              setPrompt={setPrompt}
+              negativePrompt={negativePrompt}
+              setNegativePrompt={setNegativePrompt}
+              selectedStyle={selectedStyle}
+              setSelectedStyle={setSelectedStyle}
+              aspectRatio={aspectRatio}
+              setAspectRatio={setAspectRatio}
+              selectedModel={selectedModel}
+              setSelectedModel={setSelectedModel}
+              seed={seed}
+              setSeed={setSeed}
+              isRandomSeed={isRandomSeed}
+              setIsRandomSeed={setIsRandomSeed}
+              isGenerating={isGenerating}
+              onGenerate={handleGenerateImage}
+              onRandomizePrompt={handleRandomizePrompt}
+            />
+          </div>
 
-          <HistoryGallery
-            history={history}
-            activeId={activeImage ? activeImage.id : null}
-            onSelect={(item) => !isGenerating && setActiveImage(item)}
-            onFavoriteToggle={handleFavoriteToggle}
-            onDelete={handleDeleteItem}
-            onClearAll={handleClearAllHistory}
-          />
-        </div>
-      </main>
+          {/* Right Side: Active Image viewer & Creation History */}
+          <div className="flex flex-col gap-6">
+            <PreviewPanel
+              activeImage={activeImage}
+              isGenerating={isGenerating}
+              onFavoriteToggle={handleFavoriteToggle}
+              onReuseSettings={handleReuseSettings}
+            />
+
+            <HistoryGallery
+              history={history}
+              activeId={activeImage ? activeImage.id : null}
+              onSelect={(item) => !isGenerating && setActiveImage(item)}
+              onFavoriteToggle={handleFavoriteToggle}
+              onDelete={handleDeleteItem}
+              onClearAll={handleClearAllHistory}
+            />
+          </div>
+        </main>
+      ) : (
+        <AnimeStoryboard />
+      )}
     </div>
   );
 }
